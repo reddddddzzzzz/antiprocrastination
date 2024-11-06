@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Procrastination Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tip-card h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .tip-card p {
+            color: #666;
+        }
+
+        .highlight {
+            background-color: #e74c3c;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 20px 0;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        .todo-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        .todo-button:hover {
+            background-color: #27ae60;
+        }
+
+        .todo-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: none;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .todo-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .todo-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .todo-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .todo-input button {
+            padding: 10px 20px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .todo-item.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .delete-btn {
+            margin-left: auto;
+            color: #e74c3c;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .dark-mode header {
+            background-color: #121212;
+        }
+
+        .dark-mode .tip-card {
+            background: #2d2d2d;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .dark-mode .tip-card h2 {
+            color: #fff;
+        }
+
+        .dark-mode .tip-card p {
+            color: #ddd;
+        }
+
+        .dark-mode .todo-page {
+            background-color: rgba(26, 26, 26, 0.95);
+        }
+
+        .dark-mode .todo-container {
+            background: #2d2d2d;
+        }
+
+        .dark-mode .todo-input input {
+            background: #1a1a1a;
+            border-color: #444;
+            color: #fff;
+        }
+
+        .dark-mode .todo-item {
+            border-bottom-color: #444;
+            color: #fff;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            background-color: #34495e;
+        }
+
+        .dark-mode .theme-toggle {
+            background-color: #4a4a4a;
+        }
+
+        .dark-mode .theme-toggle:hover {
+            background-color: #5a5a5a;
+        }
+    </style>
+</head>
+<body>
+    <button class="todo-button" onclick="toggleTodoPage()">To-Do List</button>
+
+    <div class="todo-page">
+        <div class="todo-container">
+            <div class="todo-header">
+                <h2>My To-Do List</h2>
+                <button class="close-button" onclick="toggleTodoPage()">Close</button>
+            </div>
+            <div class="todo-input">
+                <input type="text" id="taskInput" placeholder="Add a new task...">
+                <button onclick="addTask()">Add</button>
+            </div>
+            <ul class="todo-list" id="todoList"></ul>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <h1>Beat Procrastination</h1>
+            <p>Simple, effective tips to boost your productivity</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tip-card">
+            <h2>🕐 The 5-Second Rule</h2>
+            <p>Count down from 5 and spend the next minute setting up. Once you're set up, you're more likely to continue working!</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>📋 Break Down Tasks</h2>
+            <p>Instead of tackling the entire assignment, focus on completing <span class="highlight">The First Part</span> first. The momentum will often encourage you to continue.</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>🍬 Skip the Sweets</h2>
+            <p>Avoid sugary snacks while studying. They can lead to energy crashes and reduced focus.</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>⏲️ Use a Timer</h2>
+            <p>Try the Pomodoro technique with tools like pomofocus to maintain focused work intervals.</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>🗂️ Stay Organized</h2>
+            <p>Maintain a clean, quiet workspace. Use to-do apps or calendars to track your tasks and deadlines.</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>📚 Smart Study Strategy</h2>
+            <p>Focus on the vital 20% that yields 80% of results. Review past exams and prioritize frequently tested topics.</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>🔄 Horizontal Learning</h2>
+            <p>Connect related concepts. For example, if studying landforms, learn about their formation, impact, and relationships.</p>
+        </div>
+
+        <div class="tip-card">
+            <h2>🤖 Leverage AI Tools</h2>
+            <p>Use AI tools wisely to enhance your learning and productivity.</p>
+        </div>
+    </div>
+
+    <button class="theme-toggle" onclick="toggleDarkMode()">
+        <span id="theme-icon">🌞</span>
+        <span id="theme-text">Dark Mode</span>
+    </button>
+
+    <script>
+        function toggleTodoPage() {
+            const todoPage = document.querySelector('.todo-page');
+            todoPage.style.display = todoPage.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                const list = document.getElementById('todoList');
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                
+                li.innerHTML = `
+                    <input type="checkbox" onclick="toggleComplete(this)">
+                    <span>${text}</span>
+                    <button class="delete-btn" onclick="deleteTask(this)">×</button>
+                `;
+                
+                list.appendChild(li);
+                input.value = '';
+            }
+        }
+
+        function toggleComplete(checkbox) {
+            checkbox.parentElement.classList.toggle('completed');
+        }
+
+        function deleteTask(button) {
+            button.parentElement.remove();
+        }
+
+        // Allow adding tasks with Enter key
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.textContent = '🌙';
+                text.textContent = 'Light Mode';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.textContent = '🌞';
+                text.textContent = 'Dark Mode';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('theme-icon').textContent = '🌙';
+            document.getElementById('theme-text').textContent = 'Light Mode';
+        }
+    </script>
+</body>
+</html> 
